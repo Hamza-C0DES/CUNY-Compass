@@ -1,4 +1,7 @@
 # CUNY Compass#
 
 Members:
-Hamza Rana
+Hamza R.
+Nicholas C.
+Justice K.
+Usman M.
