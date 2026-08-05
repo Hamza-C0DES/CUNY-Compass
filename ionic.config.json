@@ -1,0 +1,7 @@
+{
+  "name": "CUNY-Compass",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
