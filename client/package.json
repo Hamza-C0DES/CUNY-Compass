@@ -1,8 +1,9 @@
 {
-  "name": "CUNY-Compass",
+  "name": "client",
   "private": true,
   "version": "0.0.1",
   "type": "module",
+  "packageManager": "yarn@4.17.0",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -19,11 +20,13 @@
     "@capacitor/status-bar": "8.0.3",
     "@ionic/react": "^8.5.0",
     "@ionic/react-router": "^8.5.0",
+    "@tanstack/react-query": "^5.101.2",
     "@types/react-router": "^5.1.20",
     "@types/react-router-dom": "^5.3.3",
     "ionicons": "^7.4.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
+    "react-hook-form": "^7.80.0",
     "react-router": "^5.3.4",
     "react-router-dom": "^5.3.4"
   },
@@ -50,5 +53,20 @@
     "vite": "^5.0.0",
     "vitest": "^0.34.6"
   },
-  "description": "An Ionic project"
+  "description": "CUNY Compass — Ionic React client",
+  "resolutions": {
+    "@types/react": "19.0.10",
+    "@types/react-dom": "19.0.4"
+  },
+  "dependenciesMeta": {
+    "core-js": {
+      "built": true
+    },
+    "cypress": {
+      "built": true
+    },
+    "esbuild": {
+      "built": true
+    }
+  }
 }
