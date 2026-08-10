@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'CUNY-Compass',
+  appId: 'edu.cuny.compass',
+  appName: 'CUNY Compass',
   webDir: 'dist'
 };
 
