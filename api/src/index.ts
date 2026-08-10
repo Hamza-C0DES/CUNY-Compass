@@ -8,6 +8,8 @@ app.use(express.json());
 
 const PORT = process.env.PORT ?? 3000;
 
+app.get('/', (req, res) => res.send('Root route working!')); 
+
 // Health check — confirms the server is running.
 app.get("/health", (_req, res) => {
   res.json({ ok: true });
