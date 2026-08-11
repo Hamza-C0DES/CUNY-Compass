@@ -32,3 +32,29 @@ export function validate(form: Form): Record<string, string> {
 
   return errors;
 }
+
+export type LoginForm = {
+  email: string;
+  password: string;
+};
+
+export const EMPTY_LOGIN: LoginForm = {
+  email: '',
+  password: '',
+};
+
+export function validateLogin(form: LoginForm): Record<string, string> {
+  const errors: Record<string, string> = {};
+
+  if (!form.email.trim()) {
+    errors.email = 'Email is required.';
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+    errors.email = 'Enter a valid email address.';
+  }
+
+  if (!form.password) {
+    errors.password = 'Password is required.';
+  }
+
+  return errors;
+}
