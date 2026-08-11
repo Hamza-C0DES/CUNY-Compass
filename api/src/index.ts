@@ -1,6 +1,8 @@
 import "dotenv/config";
 import express from "express";
-import cors from "cors"; 
+import type { NextFunction, Request, Response } from "express";
+import cors from "cors";
+import { authRouter } from "./routes/auth.js";
 
 const app = express();
 app.use(cors());
@@ -13,13 +15,21 @@ app.get("/health", (_req, res) => {
   res.json({ ok: true });
 });
 
-// TODO: implement the CUNY Compass routes.
+app.use("/api/auth", authRouter);
+
+// TODO: implement the rest of the CUNY Compass routes.
 // The capstone requires full CRUD (create, read, update, delete) on at least
 // one core resource, plus a data model with relationships between tables.
-//
-// To talk to the database, run `yarn prisma:migrate` first (generates the
-// client into src/generated/prisma), then wire it up with the pg adapter.
-// See this API's README ("Using Prisma in code") for the exact db.ts snippet.
+
+// Catches errors passed via next(err) — including rejected promises from
+// asyncHandler-wrapped routes — so a DB error returns 500 to one request
+// instead of crashing the whole process. Must be registered last, and must
+// keep all four parameters (that arity is how Express recognizes it as an
+// error handler, even though `_next` is unused).
+app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
+  console.error(err);
+  res.status(500).json({ error: "Internal server error" });
+});
 
 app.listen(PORT, () => {
   console.log(`API listening on http://localhost:${PORT}`);
