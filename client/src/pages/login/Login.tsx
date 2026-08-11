@@ -13,11 +13,31 @@ import {
 } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 
+type Form = {
+  email: string;
+  password: string;
+};
 
-// ../.. walks up out of signup/, then out of pages/, landing in src/.
-import { EMPTY, validate, type Form } from '../../../lib/schemas';
+const EMPTY: Form = { email: '', password: '' };
 
-export default function SignUp() {
+// Small local check-only validator. 
+function validate(form: Form): Record<string, string> {
+  const errors: Record<string, string> = {};
+
+  if (!form.email.trim()) {
+    errors.email = 'Email is required';
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+    errors.email = 'Enter a valid email address';
+  }
+
+  if (!form.password) {
+    errors.password = 'Password is required';
+  }
+
+  return errors;
+}
+
+export default function Login() {
   const [form, setForm] = useState<Form>(EMPTY);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const history = useHistory();
@@ -25,7 +45,6 @@ export default function SignUp() {
   // One handler for every field. `field` says which key to overwrite.
   // The spread (...form) copies the other values so they survive.
   const update = (field: keyof Form) => (event: CustomEvent) => {
-    console.log('fired:', field, event.detail);
     const value = (event.target as HTMLIonInputElement).value as string;
     setForm({ ...form, [field]: value });
   };
@@ -38,7 +57,7 @@ export default function SignUp() {
     if (Object.keys(found).length > 0) return;
 
     // No backend yet - log it so you can prove the data is real in the demo.
-    console.log('Sign up submitted:', form);
+    console.log('Log in submitted:', form);
     history.push('/home');
   }
 
@@ -46,24 +65,12 @@ export default function SignUp() {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Create your account</IonTitle>
+          <IonTitle>Log in</IonTitle>
         </IonToolbar>
       </IonHeader>
 
       <IonContent className="ion-padding">
         <IonList inset>
-          <IonItem>
-            <IonInput
-              label="Full name"
-              labelPlacement="stacked"
-              autocomplete="name"
-              value={form.fullName}
-              onIonInput={update('fullName')}
-              errorText={errors.fullName}
-              className={errors.fullName ? 'ion-touched ion-invalid' : ''}
-            />
-          </IonItem>
-
           <IonItem>
             <IonInput
               label="Email"
@@ -83,35 +90,22 @@ export default function SignUp() {
               label="Password"
               labelPlacement="stacked"
               type="password"
-              autocomplete="new-password"
+              autocomplete="current-password"
               value={form.password}
               onIonInput={update('password')}
               errorText={errors.password}
               className={errors.password ? 'ion-touched ion-invalid' : ''}
             />
           </IonItem>
-
-          <IonItem>
-            <IonInput
-              label="Confirm password"
-              labelPlacement="stacked"
-              type="password"
-              autocomplete="new-password"
-              value={form.confirmPassword}
-              onIonInput={update('confirmPassword')}
-              errorText={errors.confirmPassword}
-              className={errors.confirmPassword ? 'ion-touched ion-invalid' : ''}
-            />
-          </IonItem>
         </IonList>
 
         <IonButton expand="block" onClick={handleSubmit}>
-          Create account
+          Log in
         </IonButton>
 
         <IonNote className="ion-padding-start">
-          Already have an account?{' '}
-          <a onClick={() => history.push('/login')}>Log in</a>
+          Don't have an account?{' '}
+          <a onClick={() => history.push('/signup')}>Sign up</a>
         </IonNote>
       </IonContent>
     </IonPage>
