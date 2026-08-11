@@ -34,3 +34,5 @@ app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
 app.listen(PORT, () => {
   console.log(`API listening on http://localhost:${PORT}`);
 });
+//AI use disclosure: Claude Code was used to generate much of this file, 
+// including the auth route and all its associated middleware, JWT logic
