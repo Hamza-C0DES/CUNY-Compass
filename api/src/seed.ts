@@ -29,8 +29,8 @@ async function main() {
       fromCourseCode: "MAT 1475", fromCourseName: "Calculus I",    fromCredits: 4,
       toCourseCode: "MATH 20100", toCourseName:   "Calculus I",    toCredits:   4,
       transferType: "DIRECT",
-    }
-    {
+    },
+  {
     fromCourseCode: "MAT 1190",  fromCourseName: "Quantitative Reasoning",                              fromCredits: 3,
     toCourseCode:   "MATH 15000", toCourseName:  "Mathematics for the Contemporary World",              toCredits:   3,
     transferType: "DIRECT",
@@ -74,7 +74,7 @@ async function main() {
     fromCourseCode: "MAT 1630",   fromCourseName: "Introduction to Computational Science",             fromCredits: 3,
     toCourseCode:   "MATH 36600", toCourseName:   "Introduction to Applied Mathematical Computation",  toCredits:   3,
     transferType: "DIRECT",
-  },
+  }
   ];
 
   for (const r of rules) {
