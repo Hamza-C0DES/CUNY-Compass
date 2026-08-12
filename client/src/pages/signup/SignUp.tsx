@@ -16,30 +16,44 @@ import { useHistory } from 'react-router-dom';
 
 // ../.. walks up out of signup/, then out of pages/, landing in src/.
 import { EMPTY, validate, type Form } from '../../../lib/schemas';
+import { signup } from '../../lib/api';
+import { useAuth } from '../../auth/AuthContext';
 
 export default function SignUp() {
   const [form, setForm] = useState<Form>(EMPTY);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitting, setSubmitting] = useState(false);
   const history = useHistory();
+  const auth = useAuth();
 
   // One handler for every field. `field` says which key to overwrite.
   // The spread (...form) copies the other values so they survive.
   const update = (field: keyof Form) => (event: CustomEvent) => {
-    console.log('fired:', field, event.detail);
     const value = (event.target as HTMLIonInputElement).value as string;
     setForm({ ...form, [field]: value });
   };
 
-  function handleSubmit() {
+  async function handleSubmit() {
     const found = validate(form);
     setErrors(found);
 
     // Object.keys({ email: '...' }) is ['email']. Length 0 means valid.
     if (Object.keys(found).length > 0) return;
 
-    // No backend yet - log it so you can prove the data is real in the demo.
-    console.log('Sign up submitted:', form);
-    history.push('/home');
+    setSubmitting(true);
+    try {
+      const { token, user } = await signup({
+        fullName: form.fullName,
+        email: form.email,
+        password: form.password,
+      });
+      auth.login(token, user);
+      history.push('/home');
+    } catch (err) {
+      setErrors({ form: err instanceof Error ? err.message : 'Sign up failed' });
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -105,7 +119,13 @@ export default function SignUp() {
           </IonItem>
         </IonList>
 
-        <IonButton expand="block" onClick={handleSubmit}>
+        {errors.form && (
+          <IonNote color="danger" className="ion-padding-start">
+            {errors.form}
+          </IonNote>
+        )}
+
+        <IonButton expand="block" onClick={handleSubmit} disabled={submitting}>
           Create account
         </IonButton>
 

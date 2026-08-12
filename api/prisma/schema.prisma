@@ -16,3 +16,11 @@ datasource db {
 
 // TODO: add your models below. The capstone requires more than one table with
 // a relationship between them.
+
+model User {
+  id           String   @id @default(uuid())
+  fullName     String
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
