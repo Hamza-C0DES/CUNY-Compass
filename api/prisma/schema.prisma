@@ -23,21 +23,18 @@ model User {
   email        String   @unique
   passwordHash String
   createdAt    DateTime @default(now())
-
-  
   courses Course[]
 }
 
 model Course {
   id         String   @id @default(uuid())
+  campus String
   courseCode String
   courseName String
+  user_id String
+  user User @relation(fields: [user_id] references: [id])
   createdAt  DateTime @default(now())
-
   // Many-to-one: each Course belongs to the User who saved/planned it.
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
 }
 
 model Transfer {
@@ -45,3 +42,5 @@ model Transfer {
   name String @unique
 
 }
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
