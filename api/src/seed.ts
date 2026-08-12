@@ -30,6 +30,51 @@ async function main() {
       toCourseCode: "MATH 20100", toCourseName:   "Calculus I",    toCredits:   4,
       transferType: "DIRECT",
     }
+    {
+    fromCourseCode: "MAT 1190",  fromCourseName: "Quantitative Reasoning",                              fromCredits: 3,
+    toCourseCode:   "MATH 15000", toCourseName:  "Mathematics for the Contemporary World",              toCredits:   3,
+    transferType: "DIRECT",
+  },
+  {
+    fromCourseCode: "MAT 1100CO", fromCourseName: "Quantitative Reasoning with Corequisite Support",   fromCredits: 4,
+    toCourseCode:   null,         toCourseName:   "MATH 99902: Elective Credit Liberal Arts",          toCredits:   4,
+    transferType: "ELECTIVE",
+  },
+  {
+    fromCourseCode: "MAT 1272",  fromCourseName: "Statistics with Probability",                        fromCredits: 3,
+    toCourseCode:   "CSC 21700", toCourseName:   "Probability and Statistics for Computer Science",    toCredits:   3,
+    transferType: "DIRECT",
+  },
+  {
+    fromCourseCode: "MAT 1275",   fromCourseName: "College Algebra and Trigonometry",                  fromCredits: 4,
+    toCourseCode:   "MATH 19000", toCourseName:   "College Algebra and Trigonometry",                  toCredits:   3,
+    transferType: "DIRECT",
+  },
+  {
+    fromCourseCode: "MAT 1275CO", fromCourseName: "College Algebra and Trigonometry with Corequisite Support", fromCredits: 4,
+    toCourseCode:   "MATH 19000", toCourseName:   "College Algebra and Trigonometry",                  toCredits:   3,
+    transferType: "DIRECT",
+  },
+  {
+    fromCourseCode: "MAT 1375",   fromCourseName: "Precalculus", fromCredits: 4,
+    toCourseCode:   "MATH 19500", toCourseName:   "Precalculus", toCredits:   4,
+    transferType: "DIRECT",
+  },
+  {
+    fromCourseCode: "MAT 1475",   fromCourseName: "Calculus I", fromCredits: 4,
+    toCourseCode:   "MATH 20100", toCourseName:   "Calculus I", toCredits:   4,
+    transferType: "DIRECT",
+  },
+  {
+    fromCourseCode: "MAT 1575",   fromCourseName: "Calculus II",                                       fromCredits: 4,
+    toCourseCode:   "MATH 21200", toCourseName:   "Calculus II with Introduction to Multivariable Functions", toCredits: 4,
+    transferType: "DIRECT",
+  },
+  {
+    fromCourseCode: "MAT 1630",   fromCourseName: "Introduction to Computational Science",             fromCredits: 3,
+    toCourseCode:   "MATH 36600", toCourseName:   "Introduction to Applied Mathematical Computation",  toCredits:   3,
+    transferType: "DIRECT",
+  },
   ];
 
   for (const r of rules) {
