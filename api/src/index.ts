@@ -3,6 +3,7 @@ import express from "express";
 import type { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import { authRouter } from "./routes/auth.js";
+import { prisma } from "./db.js";
 
 const app = express();
 app.use(cors());
@@ -31,6 +32,21 @@ app.use("/api/auth", authRouter);
 app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
   console.error(err);
   res.status(500).json({ error: "Internal server error" });
+});
+
+///transfer route
+app.get("/transfer", async (req, res) => {
+  const { fromCourseCode } = req.query;
+  if (!fromCourseCode) {
+    res.status(400).json({error: "fromCourseCode is required"})
+    return;
+  }
+
+  const courseTransferRules = await prisma.transferCredit.findMany({
+    where: { fromCourseCode: fromCourseCode as string }
+  });
+
+  res.json(courseTransferRules)
 });
 
 app.listen(PORT, () => {
