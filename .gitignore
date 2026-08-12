@@ -3,7 +3,7 @@
 # environment (never commit real secrets)
 .env
 .env.local
-
 # misc
 .DS_Store
 .idea
+node_modules/
