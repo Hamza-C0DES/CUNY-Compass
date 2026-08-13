@@ -23,9 +23,29 @@ model User {
   email        String   @unique
   passwordHash String
   createdAt    DateTime @default(now())
+  courses Course[]
 }
 
+model Course {
+  id         String   @id @default(uuid())
+  campus String
+  department String
+  courseCode String
+  courseName String
+  credits String
+  grade String?
+  user_id String
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  @@unique([user_id, campus, courseCode])
+  createdAt  DateTime @default(now())
+  // Many-to-one: each Course belongs to the User who saved/planned it.
+}
+
+model Transfer {
+  id   String @id @default(uuid())
+  name String @unique
 //
+
 enum TransferType {
   DIRECT
   ELECTIVE
