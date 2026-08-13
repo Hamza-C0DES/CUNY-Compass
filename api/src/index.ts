@@ -38,7 +38,7 @@ app.post("/api/courses", requireAuth, async (req, res) => {
         department,
         courseCode: courseCode.toUpperCase(),
         courseName,
-        credits: creditsNum,
+        credits,
         grade: grade || null,
         user_id: req.userId!,
       },
