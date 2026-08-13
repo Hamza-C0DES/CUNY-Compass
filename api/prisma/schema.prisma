@@ -44,4 +44,43 @@ model Course {
 model Transfer {
   id   String @id @default(uuid())
   name String @unique
+//
+
+enum TransferType {
+  DIRECT
+  ELECTIVE
+  NO_CREDIT
+}
+
+model College {
+  id        String   @id @default(uuid())
+  name      String
+  code      String   @unique
+  createdAt DateTime @default(now())
+
+  fromRules TransferCredit[] @relation("FromCollege")
+  toRules   TransferCredit[] @relation("ToCollege")
+}
+
+model TransferCredit {
+  id             String       @id @default(uuid())
+  fromCollegeId  String
+  fromCollege    College      @relation("FromCollege", fields: [fromCollegeId], references: [id])
+  fromCourseCode String
+  fromCourseName String
+  fromCredits    Float
+
+  toCollegeId    String
+  toCollege      College      @relation("ToCollege", fields: [toCollegeId], references: [id])
+  toCourseCode   String?      // nullable — no specific match for ELECTIVE/NO_CREDIT
+  toCourseName   String?
+  toCredits      Float
+
+  transferType   TransferType @default(DIRECT)
+  notes          String?
+  createdAt      DateTime     @default(now())
+
+  @@unique([fromCollegeId, fromCourseCode, toCollegeId])
+  @@index([fromCollegeId, fromCourseCode])
+  @@index([toCollegeId])
 }
