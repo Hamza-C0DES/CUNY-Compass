@@ -44,6 +44,7 @@ model Course {
 model Transfer {
   id   String @id @default(uuid())
   name String @unique
+}
 //
 
 enum TransferType {
