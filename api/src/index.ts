@@ -43,15 +43,20 @@ app.get("/transfer", async (req, res) => {
   }
 
   const courseTransferRules = await prisma.transferCredit.findMany({
+    where: { fromCourseCode: fromCourseCode as string },
     select: {
         // fromCollegeId: true,
-        fromCollege: true,
+        fromCollege: {
+          select: { name: true }
+          },
         fromCourseCode: true,
         fromCourseName: true,
         fromCredits: true,
 
         // toCollegeId: true,
-        toCollege: true,
+        toCollege: {
+          select: {name: true}
+        },
         toCourseCode: true,
         toCourseName: true,
         toCredits: true
