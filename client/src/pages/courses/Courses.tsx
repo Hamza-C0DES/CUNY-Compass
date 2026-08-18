@@ -20,8 +20,12 @@ export default function Courses() {
   // One piece of state per input. Three fields, three useState calls.
   // The <IonInput> shows `value`, and every keystroke calls the setter.
   const [campus, setCampus] = useState('');
+  const [department, setDepartment] = useState('');
   const [courseCode, setCourseCode] = useState('');
+  const [courseName, setCourseName] = useState('');
   const [credits, setCredits] = useState('');
+  const [grade, setGrade] = useState('');
+
 
   // Two message slots so the user always knows what happened.
   const [error, setError] = useState('');
@@ -50,7 +54,6 @@ export default function Courses() {
     }
 
     setSending(true);
-    alert(3);
     try {
       const res = await fetch(`${API}/api/courses`, {
         method: 'POST',
@@ -116,20 +119,48 @@ export default function Courses() {
           />
 
           <IonInput
-            label="Course code"
+            label="Department"
             labelPlacement="stacked"
-            placeholder="CST3613"
+            placeholder="Mathematics"
+            value={department}
+            // onIonInput + e.detail.value is the Ionic pattern.
+            // e.target.value is the one that freezes the field.
+            onIonInput={(e) => setDepartment(e.detail.value ?? '')}
+          />
+
+          <IonInput
+            label="Course Code"
+            labelPlacement="stacked"
+            placeholder="MAT 1275"
             value={courseCode}
             onIonInput={(e) => setCourseCode(e.detail.value ?? '')}
+          />
+
+          <IonInput
+            label="Course Name"
+            labelPlacement="stacked"
+            placeholder="College Algebra and Trigonometry"
+            value={courseName}
+            // onIonInput + e.detail.value is the Ionic pattern.
+            // e.target.value is the one that freezes the field.
+            onIonInput={(e) => setCourseName(e.detail.value ?? '')}
           />
 
           <IonInput
             label="Credits"
             labelPlacement="stacked"
             type="number"
-            placeholder="3"
+            placeholder="4"
             value={credits}
             onIonInput={(e) => setCredits(e.detail.value ?? '')}
+          />
+
+          <IonInput
+            label="Grade"
+            labelPlacement="stacked"
+            placeholder="A"
+            value={grade}
+            onIonInput={(e) => setGrade(e.detail.value ?? '')}
           />
         </IonList>
 
