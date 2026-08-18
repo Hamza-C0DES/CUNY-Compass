@@ -27,15 +27,15 @@ app.use("/api/auth", authRouter);
 // courses route create operation
 app.post("/api/courses", requireAuth, async (req, res) => {
   const {campus, department, courseCode, courseName, credits, grade } = req.body;
-  if (!campus || !department || !courseCode || !courseName){
-    res.status(400).json({error: "Missing Campus and/or Department and/or Course-Code and/or Course-Name."});
-    return;
-  }
-  const creditsNum = Number(credits);
-  if (!Number.isInteger(creditsNum) || creditsNum < 0 || creditsNum > 12){
-    res.status(400).json({error: "Credits Must Be A Whole Number, Between 0 And 12."});
-    return;
-  }
+  // if (!campus || !department || !courseCode || !courseName){
+  //   res.status(400).json({error: "Missing Campus and/or Department and/or Course-Code and/or Course-Name."});
+  //   return;
+  // }
+  const creditsString = String(credits);
+  // if (!String.isString(creditsNum) || creditsNum < 0 || creditsNum > 12){
+  //   res.status(400).json({error: "Credits Must Be A Whole Number, Between 0 And 12."});
+  //   return;
+  // }
   try {
     const course = await prisma.course.create({
       data: {
@@ -49,7 +49,8 @@ app.post("/api/courses", requireAuth, async (req, res) => {
       },
     });
     res.status(201).json({ course })
-  } catch(err) {
+  } 
+  catch(err) {
     if(typeof err == "object" && err !== null && "code" in err && err.code === "P2002") {
       res.status(409).json({error: "You've already added this course"});
       return;
