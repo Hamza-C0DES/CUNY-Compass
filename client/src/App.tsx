@@ -48,38 +48,47 @@ const App: React.FC = () => (
     <AuthProvider>
       <IonReactRouter>
         <IonRouterOutlet>
+
           {/* SignUp Route */}
           <Route exact path="/signup">
             <SignUp />
           </Route>
+
           {/* Login Route */}
           <Route exact path="/login">
             <Login />
           </Route>
+
           {/* Home Route */}
           <PrivateRoute exact path="/home">
             <Home />
           </PrivateRoute>
+
           {/* Transfer Route */}
           <PrivateRoute exact path="/transfer">
             <TransferSearch />
           </PrivateRoute>
+
           {/* Login Route */}
           <Route exact path="/">
             <Redirect to="/login" />
           </Route>
+
           {/* Old Courses Route */}
           <Route exact path="/courses">
             <Redirect to= "/courses/view" />
           </Route>
+
           {/* Add Courses Route */}
-          <Route exact path ="courses/add">
-            <Redirect to = "courses/add" />
+          <Route exact path ="/courses/add">
+            <AddCourse />
           </Route>
+
           {/* Read Courses Route  */}
-          <Route exact path="courses/view">
-            <Redirect to ="courses/view" />
+          <Route exact path="/courses/view">
+            <ViewCourses />
           </Route>
+
         </IonRouterOutlet>
       </IonReactRouter>
     </AuthProvider>
