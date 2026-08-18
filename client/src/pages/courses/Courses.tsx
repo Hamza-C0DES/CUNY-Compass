@@ -1,8 +1,9 @@
 // client/src/pages/courses/Courses.tsx
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   IonPage,
+  IonLabel,
+  IonItem,
   IonHeader,
   IonToolbar,
   IonTitle,
