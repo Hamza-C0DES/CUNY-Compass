@@ -61,6 +61,9 @@ const App: React.FC = () => (
           <Route exact path="/">
             <Redirect to="/signup" />
           </Route>
+          <Route exact path="/courses">
+            <Courses />
+          </Route>
         </IonRouterOutlet>
       </IonReactRouter>
     </AuthProvider>
