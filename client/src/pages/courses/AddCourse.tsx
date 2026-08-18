@@ -1,4 +1,5 @@
-// client/src/pages/courses/Courses.tsx
+// client/src/pages/courses/AddCourse.tsx
+// CREATE — the form only. No list, no GET.
 
 import { useState } from 'react';
 import {
@@ -14,17 +15,11 @@ import {
 } from '@ionic/react';
 import { useAuth } from '../../auth/AuthContext';
 
-// Your Express server. Change the port if yours isn't 3000.
 const API = 'http://localhost:3000';
 
-export default function Courses() {
-  // The token comes from AuthContext, not localStorage. The context owns the
-  // key name ('cuny_compass_token'), so this page never has to know it — and
-  // if that key ever changes, only AuthContext changes with it.
+export default function AddCourse() {
   const { token } = useAuth();
 
-  // One piece of state per input. Three fields, three useState calls.
-  // The <IonInput> shows `value`, and every keystroke calls the setter.
   const [campus, setCampus] = useState('');
   const [department, setDepartment] = useState('');
   const [courseCode, setCourseCode] = useState('');
@@ -32,28 +27,27 @@ export default function Courses() {
   const [credits, setCredits] = useState('');
   const [grade, setGrade] = useState('');
 
-  // Two message slots so the user always knows what happened.
   const [error, setError] = useState('');
   const [saved, setSaved] = useState('');
-
-  // Disables the button while the request is in flight, so a double-tap
-  // doesn't fire two POSTs and give you a surprise 409.
   const [sending, setSending] = useState(false);
 
   async function handleSubmit() {
-    // Clear old messages first, or a stale error sits under a new success.
     setError('');
     setSaved('');
 
-    // Check on the client because it's instant and costs no network trip.
-    // The server still validates too — client checks are convenience, not security.
-    if (!campus.trim() || !courseCode.trim()) {
-      setError('Fill in campus, course code, and credits.');
+    // Matches the server's check exactly. Grade is the only optional field —
+    // a course you're currently taking doesn't have one yet.
+    if (
+      !campus.trim() ||
+      !department.trim() ||
+      !courseCode.trim() ||
+      !courseName.trim() ||
+      !credits.trim()
+    ) {
+      setError('Everything except grade is required.');
       return;
     }
 
-    // Still worth checking. Someone can open /courses directly without signing
-    // in, and this message is clearer than the 401 they would get otherwise.
     if (!token) {
       setError('Sign in first.');
       return;
@@ -65,52 +59,48 @@ export default function Courses() {
       const res = await fetch(`${API}/api/courses`, {
         method: 'POST',
         headers: {
-          // Tells Express to run the body through express.json().
           'Content-Type': 'application/json',
-          // This is what requireAuth reads to figure out req.userId.
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           campus: campus.trim(),
-          department,
-          courseName,
+          department: department.trim(),
           courseCode: courseCode.trim(),
-          credits: String(credits), // inputs are always strings; the route wants a number
+          courseName: courseName.trim(),
+          credits: credits.trim(),
+          grade: grade.trim(),
         }),
       });
 
-      // res.ok is true for any 2xx. Your create route returns 201.
       if (res.ok) {
-        setSaved(`Added ${courseCode.trim()}.`);
+        setSaved(`Added ${courseCode.trim().toUpperCase()}.`);
+        // Clear all six, or leftover text looks like it saved twice.
         setCampus('');
+        setDepartment('');
         setCourseCode('');
+        setCourseName('');
         setCredits('');
+        setGrade('');
       } else if (res.status === 409) {
-        // The P2002 case — this user already has that campus + course code.
-        setError('You already added that course.');
+        setError("You've already added this course.");
       } else if (res.status === 401) {
         setError('Your session expired. Sign in again.');
       } else {
-        // Your route sends { error: "..." } on a 400. Showing it beats a
-        // generic message, because it tells you what the server rejected.
         const body: { error?: string } = await res.json().catch(() => ({}));
         setError(body.error ?? `Request failed with status ${res.status}.`);
       }
     } catch {
-      // fetch only throws when the request never reached the server at all:
-      // server not running, wrong port, or CORS blocked it.
       setError(`Couldn't reach the server. Check that it's running on ${API}.`);
     } finally {
-      // finally runs whether we succeeded or threw, so the button always unlocks.
       setSending(false);
     }
   }
 
-return (
+  return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Add a Course</IonTitle>
+          <IonTitle>Add a course</IonTitle>
         </IonToolbar>
       </IonHeader>
 
@@ -121,8 +111,6 @@ return (
             labelPlacement="stacked"
             placeholder="City Tech"
             value={campus}
-            // onIonInput + e.detail.value is the Ionic pattern.
-            // e.target.value is the one that freezes the field.
             onIonInput={(e) => setCampus(e.detail.value ?? '')}
           />
 
@@ -131,13 +119,11 @@ return (
             labelPlacement="stacked"
             placeholder="Mathematics"
             value={department}
-            // onIonInput + e.detail.value is the Ionic pattern.
-            // e.target.value is the one that freezes the field.
             onIonInput={(e) => setDepartment(e.detail.value ?? '')}
           />
 
           <IonInput
-            label="Course Code"
+            label="Course code"
             labelPlacement="stacked"
             placeholder="MAT 1275"
             value={courseCode}
@@ -145,12 +131,10 @@ return (
           />
 
           <IonInput
-            label="Course Name"
+            label="Course name"
             labelPlacement="stacked"
             placeholder="College Algebra and Trigonometry"
             value={courseName}
-            // onIonInput + e.detail.value is the Ionic pattern.
-            // e.target.value is the one that freezes the field.
             onIonInput={(e) => setCourseName(e.detail.value ?? '')}
           />
 
@@ -164,7 +148,7 @@ return (
           />
 
           <IonInput
-            label="Grade"
+            label="Grade (optional)"
             labelPlacement="stacked"
             placeholder="A"
             value={grade}
@@ -176,7 +160,12 @@ return (
           {sending ? 'Adding…' : 'Add course'}
         </IonButton>
 
-        {error && ( 
+        {/* routerLink navigates without needing useHistory. */}
+        <IonButton expand="block" fill="clear" routerLink="/courses/view">
+          View my courses
+        </IonButton>
+
+        {error && (
           <IonText color="danger">
             <p>{error}</p>
           </IonText>
