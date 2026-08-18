@@ -14,6 +14,18 @@ export type AuthResponse = {
   user: PublicUser;
 };
 
+export type TransferRule = {
+  fromCollege: { name: string };
+  fromCourseCode: string;
+  fromCourseName: string;
+  fromCredits: number;
+
+  toCollege: { name: string };
+  toCourseCode: string;
+  toCourseName: string;
+  toCredits: number;
+};
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> {
@@ -55,4 +67,10 @@ export function me(token: string) {
   return apiFetch<{ user: PublicUser }>("/api/auth/me", {
     headers: { Authorization: `Bearer ${token}` },
   });
+}
+
+export function searchTransferRules(searchCourses: string) {
+  return apiFetch<TransferRule[]>(
+    `/transfer?searchCourses=${encodeURIComponent(searchCourses)}`
+  );
 }

@@ -4,6 +4,7 @@ import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/Home';
 import SignUp from './pages/signup/SignUp';
 import Login from './pages/login/Login';
+import TransferSearch from './pages/TransferSearch';
 import { AuthProvider } from './auth/AuthContext';
 import { PrivateRoute } from './auth/PrivateRoute';
 
@@ -53,6 +54,9 @@ const App: React.FC = () => (
           </Route>
           <PrivateRoute exact path="/home">
             <Home />
+          </PrivateRoute>
+          <PrivateRoute exact path="/transfer">
+            <TransferSearch />
           </PrivateRoute>
           <Route exact path="/">
             <Redirect to="/signup" />
