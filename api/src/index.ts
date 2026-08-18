@@ -5,7 +5,6 @@ import cors from "cors";
 import { authRouter } from "./routes/auth.js";
 import { prisma } from "./db.js";
 import { requireAuth } from "./middleware/requireAuth.js";
-import { stringify } from "node:querystring";
 
 const app = express();
 app.use(cors());
@@ -84,14 +83,30 @@ app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
 
 // transfer route
 app.get("/transfer", async (req, res) => {
-  const { fromCourseCode } = req.query;
-  if (!fromCourseCode) {
-    res.status(400).json({error: "fromCourseCode is required"})
+  const { searchCourses } = req.query;
+
+  if (!searchCourses) {
+    res.status(400).json({error: "Search a course is required"})
     return;
   }
 
   const courseTransferRules = await prisma.transferCredit.findMany({
-    where: { fromCourseCode: fromCourseCode as string },
+    where: {
+      OR: [
+        {
+          fromCourseCode: {
+            contains: searchCourses as string,
+            mode: "insensitive",
+          }
+        },
+        {
+          fromCourseName: {
+            contains: searchCourses as string,
+            mode: "insensitive",
+          },
+        },
+      ]
+    },
     select: {
         // fromCollegeId: true,
         fromCollege: {
@@ -110,7 +125,7 @@ app.get("/transfer", async (req, res) => {
         toCredits: true
       }
   });
-  
+
   res.json(courseTransferRules)
 });
 
