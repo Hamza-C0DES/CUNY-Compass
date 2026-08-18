@@ -5,6 +5,7 @@ import cors from "cors";
 import { authRouter } from "./routes/auth.js";
 import { prisma } from "./db.js";
 import { requireAuth } from "./middleware/requireAuth.js";
+import { stringify } from "node:querystring";
 
 const app = express();
 app.use(cors());
@@ -14,12 +15,17 @@ const PORT = process.env.PORT ?? 3000;
 
 app.get('/', (req, res) => res.send('Root route working!')); 
 
-// Health check — confirms the server is running.
+// Health check - confirms the server is running.
 app.get("/health", (_req, res) => {
   res.json({ ok: true });
 });
 
+
+// authentication middleware mount
 app.use("/api/auth", authRouter);
+
+
+// courses route create operation
 app.post("/api/courses", requireAuth, async (req, res) => {
   const {campus, department, courseCode, courseName, credits, grade } = req.body;
   if (!campus || !department || !courseCode || !courseName){
@@ -56,21 +62,27 @@ app.post("/api/courses", requireAuth, async (req, res) => {
   
 });
 
-// TODO: implement the rest of the CUNY Compass routes.
-// The capstone requires full CRUD (create, read, update, delete) on at least
-// one core resource, plus a data model with relationships between tables.
+// courses route read operation
+app.get("/api/courses", requireAuth, async (req, res) => {
+  try {
+    const courses = await prisma.course.findMany({
+      where: { user_id: req.userId! }
+    });
 
-// Catches errors passed via next(err) — including rejected promises from
-// asyncHandler-wrapped routes — so a DB error returns 500 to one request
-// instead of crashing the whole process. Must be registered last, and must
-// keep all four parameters (that arity is how Express recognizes it as an
-// error handler, even though `_next` is unused).
+    res.json(courses);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Could not fetch courses" });
+  }
+});
+
 app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
   console.error(err);
   res.status(500).json({ error: "Internal server error" });
 });
 
-///transfer route
+
+// transfer route
 app.get("/transfer", async (req, res) => {
   const { fromCourseCode } = req.query;
   if (!fromCourseCode) {
@@ -102,8 +114,9 @@ app.get("/transfer", async (req, res) => {
   res.json(courseTransferRules)
 });
 
+// port
 app.listen(PORT, () => {
   console.log(`API listening on http://localhost:${PORT}`);
 });
-//AI use disclosure: Claude Code was used to generate much of this file, 
-// including the auth route and all its associated middleware, JWT logic
+
+// TODO: AI disclosure
