@@ -1,20 +1,27 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton } from '@ionic/react';
-import { useState } from 'react';
+import {
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  IonButton,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+  IonIcon,
+} from '@ionic/react';
+import { swapHorizontalOutline, schoolOutline } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
-import ExploreContainer from '../components/ExploreContainer';
 import { useAuth } from '../auth/AuthContext';
 import './Home.css';
 
 const Home: React.FC = () => {
-  const [result, setResult] = useState<string | null>(null);
   const auth = useAuth();
   const history = useHistory();
-
-  const getHealth = async () => {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/health`);//import ensures env config standard across all machines
-    const data = await response.json();
-    setResult(JSON.stringify(data));
-};
 
   function handleLogout() {
     auth.logout();
@@ -28,24 +35,40 @@ const Home: React.FC = () => {
           <IonTitle>CUNY Compass</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
+      <IonContent fullscreen className="ion-padding">
+        {auth.user && <p>Welcome, {auth.user.fullName}</p>}
 
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Blank</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        {auth.user && <p className="ion-padding-start">Welcome, {auth.user.fullName}</p>}
-        <ExploreContainer />
-          <IonButton
-          onClick={getHealth}>
-            Check API Health
-          </IonButton>
-          <div><p>{result}</p></div>
-          <IonButton color="medium" onClick={handleLogout}>
-            Log out
-          </IonButton>
+        <IonGrid>
+          <IonRow>
+            <IonCol size="12" sizeMd="6">
+              <IonCard button onClick={() => history.push('/transfer')}>
+                <IonCardHeader>
+                  <IonIcon icon={swapHorizontalOutline} size="large" color="primary" />
+                  <IonCardTitle>Transfer</IonCardTitle>
+                </IonCardHeader>
+                <IonCardContent>
+                  Search how a course transfers between CUNY colleges.
+                </IonCardContent>
+              </IonCard>
+            </IonCol>
 
+            <IonCol size="12" sizeMd="6">
+              <IonCard button onClick={() => history.push('/courses')}>
+                <IonCardHeader>
+                  <IonIcon icon={schoolOutline} size="large" color="primary" />
+                  <IonCardTitle>Courses</IonCardTitle>
+                </IonCardHeader>
+                <IonCardContent>
+                  View and add the courses you've taken.
+                </IonCardContent>
+              </IonCard>
+            </IonCol>
+          </IonRow>
+        </IonGrid>
+
+        <IonButton color="medium" onClick={handleLogout}>
+          Log out
+        </IonButton>
       </IonContent>
     </IonPage>
   );
