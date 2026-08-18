@@ -4,7 +4,8 @@ import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/Home';
 import SignUp from './pages/signup/SignUp';
 import Login from './pages/login/Login';
-import Courses from './pages/courses/Courses';
+import AddCourse from './pages/courses/AddCourse';
+import ViewCourses from './pages/courses/ViewCourses';
 import TransferSearch from './pages/TransferSearch';
 import { AuthProvider } from './auth/AuthContext';
 import { PrivateRoute } from './auth/PrivateRoute';
@@ -47,23 +48,37 @@ const App: React.FC = () => (
     <AuthProvider>
       <IonReactRouter>
         <IonRouterOutlet>
+          {/* SignUp Route */}
           <Route exact path="/signup">
             <SignUp />
           </Route>
+          {/* Login Route */}
           <Route exact path="/login">
             <Login />
           </Route>
+          {/* Home Route */}
           <PrivateRoute exact path="/home">
             <Home />
           </PrivateRoute>
+          {/* Transfer Route */}
           <PrivateRoute exact path="/transfer">
             <TransferSearch />
           </PrivateRoute>
+          {/* Login Route */}
           <Route exact path="/">
-            <Redirect to="/signup" />
+            <Redirect to="/login" />
           </Route>
+          {/* Old Courses Route */}
           <Route exact path="/courses">
-            <Courses />
+            <Redirect to= "/courses/view" />
+          </Route>
+          {/* Add Courses Route */}
+          <Route exact path ="courses/add">
+            <Redirect to = "courses/add" />
+          </Route>
+          {/* Read Courses Route  */}
+          <Route exact path="courses/view">
+            <Redirect to ="courses/view" />
           </Route>
         </IonRouterOutlet>
       </IonReactRouter>
