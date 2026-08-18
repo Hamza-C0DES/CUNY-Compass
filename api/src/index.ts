@@ -49,7 +49,8 @@ app.post("/api/courses", requireAuth, async (req, res) => {
       },
     });
     res.status(201).json({ course })
-  } catch(err) {
+  } 
+  catch(err) {
     if(typeof err == "object" && err !== null && "code" in err && err.code === "P2002") {
       res.status(409).json({error: "You've already added this course"});
       return;

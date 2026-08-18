@@ -47,7 +47,7 @@ export default function Courses() {
 
     // Check on the client because it's instant and costs no network trip.
     // The server still validates too — client checks are convenience, not security.
-    if (!campus.trim() || !courseCode.trim() || !credits.trim()) {
+    if (!campus.trim() || !courseCode.trim()) {
       setError('Fill in campus, course code, and credits.');
       return;
     }

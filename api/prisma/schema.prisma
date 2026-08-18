@@ -32,7 +32,7 @@ model Course {
   department String
   courseCode String
   courseName String
-  credits String
+  credits String?
   grade String?
   user_id String
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
