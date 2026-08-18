@@ -1,4 +1,4 @@
-// client/src/pages/Courses.tsx
+// client/src/pages/courses/Courses.tsx
 
 import { useState } from 'react';
 import {
@@ -12,11 +12,17 @@ import {
   IonButton,
   IonText,
 } from '@ionic/react';
+import { useAuth } from '../../auth/AuthContext';
 
 // Your Express server. Change the port if yours isn't 3000.
 const API = 'http://localhost:3000';
 
 export default function Courses() {
+  // The token comes from AuthContext, not localStorage. The context owns the
+  // key name ('cuny_compass_token'), so this page never has to know it — and
+  // if that key ever changes, only AuthContext changes with it.
+  const { token } = useAuth();
+
   // One piece of state per input. Three fields, three useState calls.
   // The <IonInput> shows `value`, and every keystroke calls the setter.
   const [campus, setCampus] = useState('');
@@ -25,7 +31,6 @@ export default function Courses() {
   const [courseName, setCourseName] = useState('');
   const [credits, setCredits] = useState('');
   const [grade, setGrade] = useState('');
-
 
   // Two message slots so the user always knows what happened.
   const [error, setError] = useState('');
@@ -41,19 +46,21 @@ export default function Courses() {
     setSaved('');
 
     // Check on the client because it's instant and costs no network trip.
-    // The server still validates — client checks are convenience, not security.
+    // The server still validates too — client checks are convenience, not security.
     if (!campus.trim() || !courseCode.trim() || !credits.trim()) {
       setError('Fill in campus, course code, and credits.');
       return;
     }
-    // This is the JWT your sign-in page saved after a successful login.
-    const token = localStorage.getItem('token');
+
+    // Still worth checking. Someone can open /courses directly without signing
+    // in, and this message is clearer than the 401 they would get otherwise.
     if (!token) {
-      setError('Sign in first — no login token found.');
+      setError('Sign in first.');
       return;
     }
 
     setSending(true);
+
     try {
       const res = await fetch(`${API}/api/courses`, {
         method: 'POST',
@@ -83,14 +90,13 @@ export default function Courses() {
         setError('Your session expired. Sign in again.');
       } else {
         // Your route sends { error: "..." } on a 400. Showing it beats a
-        // generic message, because it tells you exactly what the server rejected.
+        // generic message, because it tells you what the server rejected.
         const body: { error?: string } = await res.json().catch(() => ({}));
         setError(body.error ?? `Request failed with status ${res.status}.`);
       }
-    } catch(error) {
+    } catch {
       // fetch only throws when the request never reached the server at all:
       // server not running, wrong port, or CORS blocked it.
-      console.log(error);
       setError(`Couldn't reach the server. Check that it's running on ${API}.`);
     } finally {
       // finally runs whether we succeeded or threw, so the button always unlocks.
@@ -98,7 +104,7 @@ export default function Courses() {
     }
   }
 
-  return (
+return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
