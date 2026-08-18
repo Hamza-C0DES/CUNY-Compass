@@ -9,6 +9,7 @@ import ViewCourses from './pages/courses/ViewCourses';
 import TransferSearch from './pages/TransferSearch';
 import { AuthProvider } from './auth/AuthContext';
 import { PrivateRoute } from './auth/PrivateRoute';
+import MyTransfers from './pages/MyTransfers';
 
 
 /* Core CSS required for Ionic components to work properly */
@@ -88,7 +89,13 @@ const App: React.FC = () => (
           <Route exact path="/courses/view">
             <ViewCourses />
           </Route>
-
+          
+          <PrivateRoute exact path="/my-transfers">
+            <MyTransfers />
+          </PrivateRoute>
+          <PrivateRoute exact path="/courses">
+            <Courses />
+          </PrivateRoute>
         </IonRouterOutlet>
       </IonReactRouter>
     </AuthProvider>

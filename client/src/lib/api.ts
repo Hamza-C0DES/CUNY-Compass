@@ -26,6 +26,18 @@ export type TransferRule = {
   toCredits: number;
 };
 
+export type Course = {
+  id: string;
+  campus: string;
+  department: string;
+  courseCode: string;
+  courseName: string;
+  credits: string;
+  grade: string | null;
+  user_id: string;
+  createdAt: string;
+}
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> {
@@ -73,4 +85,10 @@ export function searchTransferRules(searchCourses: string) {
   return apiFetch<TransferRule[]>(
     `/transfer?searchCourses=${encodeURIComponent(searchCourses)}`
   );
+}
+
+export function getCourses(token: string) {
+  return apiFetch<Course[]>("/api/courses", {
+    headers: {Authorization: `Bearer ${token}` },
+  });
 }
