@@ -7,6 +7,7 @@ import Login from './pages/login/Login';
 import TransferSearch from './pages/TransferSearch';
 import { AuthProvider } from './auth/AuthContext';
 import { PrivateRoute } from './auth/PrivateRoute';
+import MyTransfers from './pages/MyTransfers';
 
 
 /* Core CSS required for Ionic components to work properly */
@@ -61,6 +62,9 @@ const App: React.FC = () => (
           <Route exact path="/">
             <Redirect to="/signup" />
           </Route>
+          <PrivateRoute exact path="/my-transfers">
+            <MyTransfers />
+          </PrivateRoute>
         </IonRouterOutlet>
       </IonReactRouter>
     </AuthProvider>

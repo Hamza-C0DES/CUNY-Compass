@@ -87,9 +87,8 @@ export function searchTransferRules(searchCourses: string) {
   );
 }
 
-// wokr in progress 
-export function searchUserTransferRules(token: string) {
-  return apiFetch<{ user: PublicUser }>("/api/auth/courses", {
+export function getCourses(token: string) {
+  return apiFetch<Course[]>("/api/courses", {
     headers: {Authorization: `Bearer ${token}` },
   });
 }
