@@ -72,8 +72,10 @@ export default function Courses() {
         },
         body: JSON.stringify({
           campus: campus.trim(),
+          department,
+          courseName,
           courseCode: courseCode.trim(),
-          credits: Number(credits), // inputs are always strings; the route wants a number
+          credits: String(credits), // inputs are always strings; the route wants a number
         }),
       });
 
