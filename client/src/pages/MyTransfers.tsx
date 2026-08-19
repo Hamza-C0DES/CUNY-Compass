@@ -1,18 +1,22 @@
 import { useEffect, useState } from 'react';
 import {
+  IonBadge,
+  IonCard,
+  IonCardContent,
   IonContent,
   IonHeader,
-  IonItem,
-  IonList,
+  IonIcon,
   IonNote,
   IonPage,
   IonSpinner,
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
+import { arrowForwardOutline, listOutline } from 'ionicons/icons';
 
 import { getCourses, searchTransferRules, type Course, type TransferRule } from '../lib/api';
 import { useAuth } from '../auth/AuthContext';
+import './MyTransfers.css';
 
 type CourseWithTransfers = {
   course: Course;
@@ -59,34 +63,57 @@ export default function MyTransfers() {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent className="ion-padding">
-        {loading && <IonSpinner />}
-        {error && <IonNote color="danger">{error}</IonNote>}
-
-        {!loading && !error && results.length === 0 && (
-          <IonNote>You haven't added any courses yet.</IonNote>
+      <IonContent className="ion-padding my-transfers-content">
+        {loading && (
+          <div className="my-transfers-status">
+            <IonSpinner name="dots" />
+          </div>
         )}
 
-        <IonList inset>
+        {error && (
+          <IonNote color="danger" className="my-transfers-status">
+            {error}
+          </IonNote>
+        )}
+
+        {!loading && !error && results.length === 0 && (
+          <div className="my-transfers-empty">
+            <IonIcon icon={listOutline} />
+            <p>You haven't added any courses yet.</p>
+          </div>
+        )}
+
+        <div className="my-transfers-list">
           {results.map(({ course, transfers }) => (
-            <IonItem key={course.id}>
-              <IonNote>
-                <strong>
-                  {course.courseCode} — {course.courseName}
-                </strong>
-                <br />
-                {transfers.length === 0 && 'No transfer rule found for this course yet.'}
-                {transfers.map((rule, i) => (
-                  <div key={i}>
-                    → {rule.toCourseCode ?? 'No direct match'} ({rule.toCollege.name})
-                    <br />
-                    Credits: {rule.fromCredits} → {rule.toCredits}
+            <IonCard key={course.id} className="my-transfer-card">
+              <IonCardContent>
+                <div className="my-transfer-course-header">
+                  <span className="my-transfer-code">{course.courseCode}</span>
+                  <span className="my-transfer-name">{course.courseName}</span>
+                </div>
+
+                {transfers.length === 0 ? (
+                  <p className="my-transfer-none">No transfer rule found for this course yet.</p>
+                ) : (
+                  <div className="my-transfer-rules">
+                    {transfers.map((rule, i) => (
+                      <div key={i} className="my-transfer-rule-row">
+                        <IonIcon icon={arrowForwardOutline} className="my-transfer-arrow" />
+                        <div className="my-transfer-rule-info">
+                          <span className="my-transfer-rule-code">
+                            {rule.toCourseCode ?? 'No direct match'}
+                          </span>
+                          <span className="my-transfer-rule-college">{rule.toCollege.name}</span>
+                        </div>
+                        <IonBadge color="medium">{rule.fromCredits} cr → {rule.toCredits} cr</IonBadge>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </IonNote>
-            </IonItem>
+                )}
+              </IonCardContent>
+            </IonCard>
           ))}
-        </IonList>
+        </div>
       </IonContent>
     </IonPage>
   );

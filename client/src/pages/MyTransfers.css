@@ -1,0 +1,100 @@
+.my-transfers-status {
+  display: flex;
+  justify-content: center;
+  padding: 24px 0;
+}
+
+.my-transfers-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 32px 16px;
+  color: var(--ion-color-medium);
+  text-align: center;
+}
+
+.my-transfers-empty ion-icon {
+  font-size: 32px;
+}
+
+.my-transfers-empty p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.my-transfers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.my-transfer-card {
+  margin: 0;
+  border-radius: 12px;
+}
+
+.my-transfer-course-header {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.my-transfer-code {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.my-transfer-name {
+  font-size: 0.85rem;
+  color: var(--ion-color-medium-shade);
+}
+
+.my-transfer-none {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--ion-color-medium);
+}
+
+.my-transfer-rules {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.my-transfer-rule-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--ion-color-light);
+}
+
+.my-transfer-arrow {
+  flex-shrink: 0;
+  font-size: 16px;
+  color: var(--ion-color-medium);
+}
+
+.my-transfer-rule-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.my-transfer-rule-code {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.my-transfer-rule-college {
+  font-size: 0.75rem;
+  color: var(--ion-color-medium);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
