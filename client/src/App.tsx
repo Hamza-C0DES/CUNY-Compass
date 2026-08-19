@@ -93,9 +93,7 @@ const App: React.FC = () => (
           <PrivateRoute exact path="/my-transfers">
             <MyTransfers />
           </PrivateRoute>
-          <PrivateRoute exact path="/courses">
-            <Courses />
-          </PrivateRoute>
+
         </IonRouterOutlet>
       </IonReactRouter>
     </AuthProvider>
