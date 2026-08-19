@@ -14,7 +14,7 @@ import {
   IonCardContent,
   IonIcon,
 } from '@ionic/react';
-import { swapHorizontalOutline, schoolOutline } from 'ionicons/icons';
+import { swapHorizontalOutline, schoolOutline, listOutline, searchOutline, addCircleOutline } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 import './Home.css';
@@ -48,6 +48,30 @@ const Home: React.FC = () => {
                 </IonCardHeader>
                 <IonCardContent>
                   Search how a course transfers between CUNY colleges.
+                  <IonButton
+                    expand="block"
+                    fill="outline"
+                    className="ion-margin-top"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      history.push('/my-transfers');
+                    }}
+                  >
+                    <IonIcon icon={listOutline} slot="start" />
+                    My Transfers
+                  </IonButton>
+                  <IonButton
+                    expand="block"
+                    fill="outline"
+                    className="ion-margin-top"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      history.push('/transfer');
+                    }}
+                  >
+                    <IonIcon icon={searchOutline} slot="start" />
+                    Explore Transfers
+                  </IonButton>
                 </IonCardContent>
               </IonCard>
             </IonCol>
@@ -60,6 +84,30 @@ const Home: React.FC = () => {
                 </IonCardHeader>
                 <IonCardContent>
                   View and add the courses you've taken.
+                  <IonButton
+                    expand="block"
+                    fill="outline"
+                    className="ion-margin-top"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      history.push('/courses/view');
+                    }}
+                  >
+                    <IonIcon icon={listOutline} slot="start" />
+                    View My Courses
+                  </IonButton>
+                  <IonButton
+                    expand="block"
+                    fill="outline"
+                    className="ion-margin-top"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      history.push('/courses/add');
+                    }}
+                  >
+                    <IonIcon icon={addCircleOutline} slot="start" />
+                    Add Course
+                  </IonButton>
                 </IonCardContent>
               </IonCard>
             </IonCol>
