@@ -1,30 +1,49 @@
 import { useState } from 'react';
 import {
-  IonButton,
+  IonBadge,
+  IonCard,
+  IonCardContent,
   IonContent,
   IonHeader,
-  IonInput,
-  IonItem,
-  IonList,
+  IonIcon,
   IonNote,
   IonPage,
+  IonSearchbar,
+  IonSpinner,
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
+import { arrowForwardOutline, schoolOutline, searchOutline } from 'ionicons/icons';
 
 import { searchTransferRules, type TransferRule } from '../lib/api';
+import './TransferSearch.css';
 
 export default function TransferSearch() {
-  const [search, setSearch] = useState<string>("");
+  const [search, setSearch] = useState<string>('');
   const [results, setResults] = useState<TransferRule[]>([]);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [searched, setSearched] = useState(false);
 
-  async function handleSearch() {
+  async function handleSearch(value: string) {
+    if (!value.trim()) {
+      setResults([]);
+      setSearched(false);
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    setSearched(true);
+
     try {
-      const data = await searchTransferRules(search);
+      const data = await searchTransferRules(value);
       setResults(data);
     } catch (err) {
-      setErrors({ form: err instanceof Error ? err.message : 'Search failed' });
+      setError(err instanceof Error ? err.message : 'Search failed');
+      setResults([]);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -36,40 +55,72 @@ export default function TransferSearch() {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent className="ion-padding">
-        <IonList inset>
-          <IonItem>
-            <IonInput
-              label="Search"
-              labelPlacement="stacked"
-              placeholder="e.g. Calculus or MAT 1475"
-              value={search}
-              onIonInput={(e) => setSearch(e.detail.value ?? "")}
-            />
-          </IonItem>
-        </IonList>
+      <IonContent className="ion-padding transfer-search-content">
+        <IonSearchbar
+          value={search}
+          placeholder="e.g. Calculus or MAT 1475"
+          debounce={400}
+          onIonInput={(e) => {
+            const value = e.detail.value ?? '';
+            setSearch(value);
+            handleSearch(value);
+          }}
+          className="transfer-search-bar"
+        />
 
-        {errors.form && (
-          <IonNote color="danger" className="ion-padding-start">
-            {errors.form}
+        {error && (
+          <IonNote color="danger" className="transfer-search-status">
+            {error}
           </IonNote>
         )}
 
-        <IonButton expand="block" onClick={handleSearch}>
-          Search
-        </IonButton>
+        {loading && (
+          <div className="transfer-search-status">
+            <IonSpinner name="dots" />
+          </div>
+        )}
 
-        <IonList inset>
+        {!loading && searched && !error && results.length === 0 && (
+          <div className="transfer-search-empty">
+            <IonIcon icon={searchOutline} />
+            <p>No matching courses found.</p>
+          </div>
+        )}
+
+        {!loading && !searched && (
+          <div className="transfer-search-empty">
+            <IonIcon icon={schoolOutline} />
+            <p>Search a course to see how it transfers between CUNY colleges.</p>
+          </div>
+        )}
+
+        <div className="transfer-results">
           {results.map((rule, index) => (
-            <IonItem key={index}>
-              <IonNote>
-                {rule.fromCourseCode} ({rule.fromCollege.name}) → {rule.toCourseCode ?? "No direct match"} ({rule.toCollege.name})
-                <br />
-                Credits: {rule.fromCredits} → {rule.toCredits}
-              </IonNote>
-            </IonItem>
+            <IonCard key={index} className="transfer-rule-card">
+              <IonCardContent>
+                <div className="transfer-rule-row">
+                  <div className="transfer-rule-course">
+                    <span className="transfer-rule-code">{rule.fromCourseCode}</span>
+                    <span className="transfer-rule-college">{rule.fromCollege.name}</span>
+                  </div>
+
+                  <IonIcon icon={arrowForwardOutline} className="transfer-rule-arrow" />
+
+                  <div className="transfer-rule-course transfer-rule-course-to">
+                    <span className="transfer-rule-code">
+                      {rule.toCourseCode ?? 'No direct match'}
+                    </span>
+                    <span className="transfer-rule-college">{rule.toCollege.name}</span>
+                  </div>
+                </div>
+
+                <div className="transfer-rule-footer">
+                  <IonBadge color="medium">{rule.fromCredits} cr → {rule.toCredits} cr</IonBadge>
+                </div>
+              </IonCardContent>
+            </IonCard>
           ))}
-        </IonList>
+        </div>
       </IonContent>
     </IonPage>
   );
